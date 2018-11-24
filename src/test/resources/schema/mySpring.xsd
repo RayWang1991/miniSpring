@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://indi.ray.miniSpring"
+           targetNamespace="http://indi.ray.miniSpring">
+    <!--elementFormDefault="qualified">-->
+
+    <xs:element name="value" type="xs:string">
+    </xs:element>
+
+    <xs:element name="ref">
+        <xs:complexType>
+            <xs:complexContent mixed="true">
+                <xs:restriction base="xs:anyType">
+                    <xs:attribute name="bean" type="xs:string"/>
+                </xs:restriction>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="null" type="xs:string"/>
+
+    <xs:element name="integer">
+        <xs:simpleType>
+            <xs:restriction base="xs:int">
+                <xs:minInclusive value="0"/>
+                <xs:maxInclusive value="100"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+
+    <xs:group name="collectionSubElements">
+        <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="list"/>
+                <xs:element ref="map"/>
+                <xs:element ref="set"/>
+                <xs:element ref="value"/>
+                <xs:element ref="null"/>
+                <xs:element ref="ref"/>
+                <xs:element ref="bean"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:group>
+
+    <xs:element name="key" type="xs:string"/>
+    <xs:element name="entry">
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="1">
+                <xs:element ref="key"/>
+                <xs:group ref="collectionSubElements"/>
+            </xs:sequence>
+            <xs:attribute name="key" type="xs:string"/>
+            <xs:attribute name="key-ref" type="xs:string"/>
+            <xs:attribute name="value" type="xs:string"/>
+            <xs:attribute name="value-ref" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="map">
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="entry"/>
+            </xs:sequence>
+            <xs:attribute name="key-type" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        <![CDATA[
+                        表示map的key的类型
+                        ]]>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="list">
+        <xs:complexType>
+            <xs:group ref="collectionSubElements"/>
+            <xs:attribute name="type" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="set">
+        <xs:complexType>
+            <xs:group ref="collectionSubElements"/>
+            <xs:attribute name="type" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:attribute name="id" type="xs:string"/>
+
+
+    <xs:complexType name="typeWithId" abstract="true">
+        <xs:attribute name="id" type="xs:string"/>
+    </xs:complexType>
+
+    <!--beanAttribute-->
+    <xs:attributeGroup name="beanAttribute">
+        <xs:attribute name="name" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    <![CDATA[
+                    bean的beanName，用作唯一标识bean，如为空，则在xml中不可引用bean。bean的名称则为类名+#编号
+                    ]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+
+        <xs:attribute name="class" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation source="java:java.lang.Class"><![CDATA[
+	The fully qualified name of the bean's class, except if it serves only
+	as a parent definition for child bean definitions.
+				]]></xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+
+        <xs:attribute name="autowired" default="default">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="default"/>
+                    <xs:enumeration value="no"/>
+                    <xs:enumeration value="byName"/>
+                    <xs:enumeration value="byType"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+
+        <xs:attribute name="depends-on" type="xs:string">
+        </xs:attribute>
+
+        <xs:attribute name="primary" type="xs:boolean" default="false"/>
+
+        <xs:attribute name="lazy-init" type="xs:boolean" default="false"/>
+
+        <xs:attribute name="scope" default="singleton">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="singleton"/>
+                    <xs:enumeration value="prototype"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+
+    </xs:attributeGroup>
+
+    <!--beanElements-->
+
+    <xs:element name="property">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="1">
+                <xs:element ref="bean"/>
+                <xs:element ref="ref"/>
+                <xs:element ref="value"/>
+                <xs:element ref="null"/>
+                <xs:element ref="list"/>
+                <xs:element ref="set"/>
+                <xs:element ref="map"/>
+            </xs:choice>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="value" type="xs:string"/>
+            <xs:attribute name="value-ref" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="constructor-arg">
+        <xs:complexType>
+            <xs:choice minOccurs="1" maxOccurs="1">
+                <xs:element ref="bean"/>
+                <xs:element ref="ref"/>
+                <xs:element ref="value"/>
+                <xs:element ref="null"/>
+                <xs:element ref="list"/>
+                <xs:element ref="set"/>
+                <xs:element ref="map"/>
+            </xs:choice>
+            <xs:attribute name="index" type="xs:int"/>
+            <xs:attribute name="type" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:group name="beanElements">
+        <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="property"/>
+                <xs:element ref="constructor-arg"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:group>
+
+    <xs:element name="bean">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="typeWithId">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:group ref="beanElements"/>
+                    </xs:sequence>
+                    <xs:attributeGroup ref="beanAttribute"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="beans">
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="bean"/>
+            </xs:sequence>
+            <xs:attribute name="default-autowire" default="byName">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="no"/>
+                        <xs:enumeration value="byName"/>
+                        <xs:enumeration value="byType"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://indi.ray.miniSpring"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://indi.ray.miniSpring /Users/raywang/IdeaProjects/miniSpring/src/test/resources/schema/mySpring.xsd"
+       default-autowire="byName">
+    <bean id="obj" class="java.lang.String"/>
+    <bean id="pojo" class="indi.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean"/>
+    <bean id="constructorTestBean1"
+          class="indi.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
+        <constructor-arg>
+            <ref>obj</ref>
+        </constructor-arg>
+        <constructor-arg>
+            <ref>pojo</ref>
+        </constructor-arg>
+    </bean>
+    <bean id="constructorTestBean2"
+          class="indi.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
+        <constructor-arg>
+            <ref>obj</ref>
+        </constructor-arg>
+        <constructor-arg>
+            <ref>pojo</ref>
+        </constructor-arg>
+        <constructor-arg>
+            <value>10</value>
+        </constructor-arg>
+    </bean>
+    <bean id="constructorTestBean3"
+          class="indi.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
+        <constructor-arg>
+            <ref>obj</ref>
+        </constructor-arg>
+        <constructor-arg>
+            <value>stringValue</value>
+        </constructor-arg>
+    </bean>
+    <bean id="constructorTestBean4"
+          class="indi.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
+        <constructor-arg>
+            <list type="java.lang.Object">
+                <value>obj</value>
+            </list>
+        </constructor-arg>
+        <constructor-arg>
+            <list type="int">
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+            </list>
+        </constructor-arg>
+    </bean>
+    <bean id="constructorTestBean5"
+          class="indi.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
+        <constructor-arg >
+            <value>1</value>
+        </constructor-arg>
+    </bean>
+    <bean id="constructorTestBean6"
+          class="indi.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
+        <constructor-arg >
+            <list type="java.lang.Integer">
+                <value>1</value>
+            </list>
+        </constructor-arg>
+    </bean>
+    <bean id="constructorTestBean7"
+          class="indi.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
+        <constructor-arg>
+            <set type="java.lang.String">
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+            </set>
+        </constructor-arg>
+    </bean>
+</beans>

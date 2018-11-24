@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://indi.ray.miniSpring"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://indi.ray.miniSpring /Users/raywang/IdeaProjects/miniSpring/src/test/resources/schema/mySpring.xsd"
+       default-autowire="no">
+    <bean id="obj" class="indi.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean"/>
+    <bean id="pojo" class="indi.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean"
+          autowired="byName">
+        <property name="a" value="10"/>
+    </bean>
+    <bean id="object" class="java.lang.Object"/>
+    <bean id="pojo1" class="indi.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean"
+          autowired="byType">
+        <property name="a" value="15"/>
+    </bean>
+</beans>

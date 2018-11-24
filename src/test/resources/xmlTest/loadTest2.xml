@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://indi.ray.miniSpring"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://indi.ray.miniSpring /Users/raywang/IdeaProjects/miniSpring/src/test/resources/schema/mySpring.xsd"
+       default-autowire="byName">
+    <bean id="constructorTestBean"
+          class="indi.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBeanInt">
+        <constructor-arg index="0" type="int">
+            <value>10</value>
+        </constructor-arg>
+    </bean>
+    <bean id="constructorTestBean1"
+          class="indi.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBeanInt">
+        <constructor-arg>
+            <value>10</value>
+        </constructor-arg>
+    </bean>
+</beans>
