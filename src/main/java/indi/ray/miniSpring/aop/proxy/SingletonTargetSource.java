@@ -7,6 +7,10 @@ public class SingletonTargetSource implements TargetSource {
         this.target = target;
     }
 
+    public boolean isSingleton() {
+        return true;
+    }
+
     public void setTarget(Object target) {
         this.target = target;
     }

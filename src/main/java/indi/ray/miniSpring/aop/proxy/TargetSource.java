@@ -4,4 +4,6 @@ public interface TargetSource {
     Object getTarget();
 
     Class<?> getTargetClass();
+
+    boolean isSingleton();
 }
