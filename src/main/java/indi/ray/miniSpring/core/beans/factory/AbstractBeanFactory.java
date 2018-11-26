@@ -23,4 +23,8 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     public Class<?> getBeanType(String name) {
         return null;
     }
+
+    public boolean isSingleton(String beanName) {
+        return false;
+    }
 }
