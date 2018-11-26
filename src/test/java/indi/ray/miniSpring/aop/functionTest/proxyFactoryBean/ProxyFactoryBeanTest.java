@@ -79,7 +79,7 @@ public class ProxyFactoryBeanTest {
         people2.getAge();
         people2.getName();
 
-        AssertUtils.assertTrue(student1 != student2, "proxies for stuednt should be the same");
+        AssertUtils.assertTrue(student1 != student2, "proxies for student should not be the same");
         List<String> recorder = applicationContext.getBean("nameRecorder", List.class);
         List<String> want = Lists.newArrayList(new String[]{"say", "saysay", "getAge", "getAgegetAge", "getName", "getNamegetName"});
         AssertUtils.assertEquals(recorder, want, "");

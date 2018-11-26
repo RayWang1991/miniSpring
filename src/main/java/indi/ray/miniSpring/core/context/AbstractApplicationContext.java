@@ -44,8 +44,11 @@ public abstract class AbstractApplicationContext implements BeanFactory {
     /** BeanDefinitions beanName -> definition */
     protected Map<String, BeanDefinition> beanDefinitionMap = new HashMap<String, BeanDefinition>(256);
 
-    /** cache for singletons */
+    /** cache for complete singletons */
     protected Map<String, Object> cachedSingletons = new HashMap<String, Object>(256);
+
+    /** cache for early exposed singletons */
+    protected Map<String, Object> earlySingletons = new HashMap<String, Object>(256);
 
     /** singletons in creation */
     protected Set<String> singletonsInCreation = new HashSet<String>(16);
@@ -121,6 +124,10 @@ public abstract class AbstractApplicationContext implements BeanFactory {
     private <T> T doGetBean(String beanName, final Class<T> requiredType) {
         // check for singleton cache
         Object bean = this.cachedSingletons.get(beanName);
+        if (bean == null) {
+            bean = this.earlySingletons.get(beanName);
+        }
+
         if (bean != null) {
             logger.debug("从缓存中获取单例" + beanName);
             return getBeanInstanceFromBean(beanName, bean, requiredType);
@@ -132,15 +139,15 @@ public abstract class AbstractApplicationContext implements BeanFactory {
 
         // have to create new Bean
         bean = doCreateBean(beanName, beanDefinition);
-        this.cachedSingletons.put(beanName, bean);
 
         return getBeanInstanceFromBean(beanName, bean, requiredType);
     }
 
     private Object doCreateBean(String beanName, BeanDefinition bd) {
         Object bean;
+        boolean isSingleton = bd.getScopeEnum() == ScopeEnum.SINGLETON;
 
-        if (bd.getScopeEnum() == ScopeEnum.SINGLETON) {
+        if (isSingleton) {
             beforeSingletonCreation(beanName);
             bean = this.beanCreator.createBean(bd, this);
             afterSingletonCreation(beanName, bean);
@@ -155,6 +162,11 @@ public abstract class AbstractApplicationContext implements BeanFactory {
 
         // initiateBean
         Object val = initiateBean(bean, beanName);
+
+        if (isSingleton) {
+            this.cachedSingletons.put(beanName, val);
+            this.earlySingletons.remove(beanName);
+        }
 
         return val;
     }
@@ -219,6 +231,7 @@ public abstract class AbstractApplicationContext implements BeanFactory {
         if (!this.singletonsInCreation.remove(beanName)) {
             throw new IllegalStateException(beanName + " isn't currently in creation");
         }
+        this.earlySingletons.put(beanName, bean);
     }
 
     private void afterPrototypeCreation(String beanName, Object bean) {
