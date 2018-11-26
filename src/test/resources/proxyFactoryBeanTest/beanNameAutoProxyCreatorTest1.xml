@@ -3,25 +3,40 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://indi.ray.miniSpring /Users/raywang/IdeaProjects/miniSpring/src/test/resources/schema/mySpring.xsd"
        default-autowire="byName">
-    <bean id="pojo1" class="indi.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean"/>
-    <bean class="indi.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean"/>
-    <bean id="pojo2" class="indi.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean"/>
-    <bean id="constructorTestBean" class="indi.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
-        <constructor-arg type="java.lang.Object" index="0">
-            <ref>pojo1</ref>
-        </constructor-arg>
-        <constructor-arg type="indi.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean" index="1">
-            <ref>pojo2</ref>
+    <bean id="logInterceptor" class="indi.ray.miniSpring.aop.functionTest.proxySetUp.MethodLoggerInterceptor"/>
+    <bean id="performInterceptor" class="indi.ray.miniSpring.aop.functionTest.proxySetUp.MethodPerformanceInterceptor"/>
+    <bean id="nameRecorder" class="java.util.ArrayList"/>
+    <bean id="normRecorderInterceptor"
+          class="indi.ray.miniSpring.aop.functionTest.proxySetUp.MethodNameRecordInterceptor">
+        <constructor-arg>
+            <ref>nameRecorder</ref>
         </constructor-arg>
     </bean>
-    <bean class="indi.ray.miniSpring.core.functionTest.xml.postProcessors.SayNamePostProcessor"/>
-    <bean id="counter" class="indi.ray.miniSpring.core.functionTest.xml.postProcessors.Counter">
-        <property name="count" value="0"/>
+
+    <bean id="doubleRecorderInterceptor"
+          class="indi.ray.miniSpring.aop.functionTest.proxySetUp.MethodNameDoubleRecordInterceptor">
+        <constructor-arg>
+            <ref>nameRecorder</ref>
+        </constructor-arg>
     </bean>
-    <bean class="indi.ray.miniSpring.core.functionTest.xml.postProcessors.PostProcessorPhraseA">
-        <property name="counter" value-ref="counter"/>
+
+
+    <bean id="student" class="indi.ray.miniSpring.aop.Student"/>
+
+    <bean class="indi.ray.miniSpring.aop.autoProxyCreator.BeanNameAutoProxyCreator">
+        <property name="interceptorNames">
+            <list type="java.lang.String">
+                <value>logInterceptor</value>
+                <value>performInterceptor</value>
+                <value>normRecorderInterceptor</value>
+                <value>doubleRecorderInterceptor</value>
+            </list>
+        </property>
+        <property name="beanNames">
+            <list type="java.lang.String">
+                <value>student</value>
+            </list>
+        </property>
     </bean>
-    <bean class="indi.ray.miniSpring.core.functionTest.xml.postProcessors.PostProcessorPhraseB">
-        <property name="counter" value-ref="counter"/>
-    </bean>
+
 </beans>

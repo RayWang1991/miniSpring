@@ -1,14 +1,13 @@
-package indi.ray.miniSpring.aop.functionTest.test;
+package indi.ray.miniSpring.aop.functionTest.proxyFactory;
 
 import indi.ray.miniSpring.aop.Man;
 import indi.ray.miniSpring.aop.People;
 import indi.ray.miniSpring.aop.advise.MethodInterceptor;
 import indi.ray.miniSpring.aop.advisor.NamedMatchMethodPointCutAdvisor;
 import indi.ray.miniSpring.aop.advisor.RegexMethodPointCutAdvisor;
-import indi.ray.miniSpring.aop.functionTest.proxy.MethodLoggerInterceptor;
-import indi.ray.miniSpring.aop.functionTest.proxy.MethodPerformanceInterceptor;
+import indi.ray.miniSpring.aop.functionTest.proxySetUp.MethodLoggerInterceptor;
+import indi.ray.miniSpring.aop.functionTest.proxySetUp.MethodPerformanceInterceptor;
 import indi.ray.miniSpring.aop.proxy.AdvisedSupport;
-import indi.ray.miniSpring.aop.proxy.AopProxy;
 import indi.ray.miniSpring.aop.proxy.AopProxyFactory;
 import indi.ray.miniSpring.aop.proxy.DefaultAopProxyFactory;
 import indi.ray.miniSpring.aop.proxy.ProxyFactory;
@@ -49,7 +48,7 @@ public class ProxyTest {
         // proxyFactory
         AopProxyFactory aopProxyFactory = new DefaultAopProxyFactory();
 
-        // proxy instance
+        // proxySetUp instance
         Object proxy = aopProxyFactory.createAopProxy(config).getProxy();
 
         People man = (People) proxy;
@@ -68,7 +67,7 @@ public class ProxyTest {
         targetMan.setName("TOTO");
         targetMan.setAge(10);
 
-        // proxy instance
+        // proxySetUp instance
         People man = ProxyFactory.getProxy(People.class, targetMan, performanceInterceptor);
 
         man.say();

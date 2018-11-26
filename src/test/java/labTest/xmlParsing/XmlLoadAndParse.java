@@ -35,8 +35,8 @@ public class XmlLoadAndParse {
             logger.info(e);
         }
 
-        String path = "/Users/raywang/IdeaProjects/miniSpring/src/test/resources/xmlTest/test.xml";
-//        String path = "/Users/raywang/IdeaProjects/miniSpring/src/test/resources/xmlTest/sample.xml";
+        String path = "/Users/raywang/IdeaProjects/miniSpring/src/proxyFactory/resources/xmlTest/proxyFactory.xml";
+//        String path = "/Users/raywang/IdeaProjects/miniSpring/src/proxyFactory/resources/xmlTest/sample.xml";
         File file = new File(path);
         Document document = null;
         try {

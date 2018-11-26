@@ -1,4 +1,4 @@
 package labTest.reflective;
 
-public class Speak {
+public interface Speaker {
 }

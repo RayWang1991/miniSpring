@@ -1,4 +1,4 @@
 package labTest.reflective;
 
-public interface People {
+public interface People extends Animal {
 }

@@ -1,4 +1,4 @@
 package labTest.reflective;
 
-public class Studen {
+public class Student extends AbstractPeople implements Talker {
 }

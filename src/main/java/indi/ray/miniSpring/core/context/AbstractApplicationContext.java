@@ -1,7 +1,9 @@
 package indi.ray.miniSpring.core.context;
 
 import indi.ray.miniSpring.core.API.BeanFactoryAware;
+import indi.ray.miniSpring.core.API.BeanPostProcessor;
 import indi.ray.miniSpring.core.API.FactoryBean;
+import indi.ray.miniSpring.core.API.Ordered;
 import indi.ray.miniSpring.core.beans.definition.BeanDefinition;
 import indi.ray.miniSpring.core.beans.definition.ScopeEnum;
 import indi.ray.miniSpring.core.beans.exception.BeanCurrentlyInCreationException;
@@ -15,11 +17,15 @@ import indi.ray.miniSpring.core.context.creator.DefaultBeanCreator;
 import indi.ray.miniSpring.core.context.populator.BeanPopulater;
 import indi.ray.miniSpring.core.context.populator.DefaultBeanPopulater;
 import indi.ray.miniSpring.core.utils.AssertUtils;
+import indi.ray.miniSpring.core.utils.OrderUtils;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -47,6 +53,8 @@ public abstract class AbstractApplicationContext implements BeanFactory {
     /** prototypes in creation */
     protected Set<String> protoTypesInCreation = new HashSet<String>(16);
 
+    protected List<BeanPostProcessor> beanPostProcessors = new ArrayList<BeanPostProcessor>();
+
     /**
      * refresh the context, do all prepare work
      */
@@ -59,6 +67,18 @@ public abstract class AbstractApplicationContext implements BeanFactory {
         finishBeanFactoryInitialization(); // Instantiate all remaining (non lazy-init) singletons
     }
 
+    protected void clear() {
+        this.beanNamesByClassMap.clear();
+        this.beanDefinitionMap.clear();
+        this.cachedSingletons.clear();
+        this.beanPostProcessors.clear();
+        this.protoTypesInCreation.clear();
+        this.singletonsInCreation.clear();
+    }
+
+    /**
+     * Subclass should do prepare work here, e.g. clear the containers
+     */
     protected abstract void prepareRefresh();
 
     protected abstract void scanBeanDefinitions();
@@ -67,7 +87,34 @@ public abstract class AbstractApplicationContext implements BeanFactory {
 
     protected abstract void invokeBeanFactoryPostProcessors();
 
-    protected abstract void registerBeanPostProcessors();
+    protected void registerBeanPostProcessors() {
+        // todo: find another way to sort processors
+        // 1.find all beanNames for BeanPostProcessors
+        Set<String> postProcessorNames = new LinkedHashSet<String>(8);
+        for (Map.Entry<Class<?>, Set<String>> entry : this.beanNamesByClassMap.entrySet()) {
+            if (BeanPostProcessor.class.isAssignableFrom(entry.getKey())) {
+                postProcessorNames.addAll(entry.getValue());
+            }
+        }
+
+        // 2.sort them
+        List<BeanPostProcessor> postProcessors = new ArrayList<BeanPostProcessor>();
+        for (String name : postProcessorNames) {
+            BeanPostProcessor postProcessor = this.getBean(name, BeanPostProcessor.class);
+            postProcessors.add(postProcessor);
+        }
+
+        Collections.sort(postProcessors, OrderUtils.DEFALT_COMPARATOR);
+
+        // 3.register them
+        for (BeanPostProcessor postProcessor : postProcessors) {
+            this.addPostProcessor(postProcessor);
+        }
+    }
+
+    protected void addPostProcessor(BeanPostProcessor beanPostProcessor) {
+        this.beanPostProcessors.add(beanPostProcessor);
+    }
 
     protected abstract void finishBeanFactoryInitialization();
 
@@ -85,6 +132,7 @@ public abstract class AbstractApplicationContext implements BeanFactory {
 
         // have to create new Bean
         bean = doCreateBean(beanName, beanDefinition);
+        this.cachedSingletons.put(beanName, bean);
 
         return getBeanInstanceFromBean(beanName, bean, requiredType);
     }
@@ -104,19 +152,58 @@ public abstract class AbstractApplicationContext implements BeanFactory {
 
         // populate bean
         populateBean(bean, bd);
-        initiateBean(bean);
 
-        return bean;
+        // initiateBean
+        Object val = initiateBean(bean, beanName);
+
+        return val;
     }
 
     private void populateBean(Object bean, BeanDefinition bd) {
         this.beanPopulater.populateBean(bean, bd, this);
     }
 
-    private void initiateBean(Object bean) {
+    private Object initiateBean(Object bean, String beanName) {
+        invokeAwareMethods(bean, beanName);
+
+        Object val = bean;
+        val = postProcessOnBeanBeforeInitiation(bean, beanName);
+        invokeInitMethod(val);
+        postProcessOnBeanAfterInitiation(val, beanName);
+
+        return val;
+    }
+
+    private void invokeAwareMethods(Object bean, String beanName) {
         if (bean instanceof BeanFactoryAware) {
             ((BeanFactoryAware) bean).setBeanFactory(this);
         }
+    }
+
+    private void invokeInitMethod(Object bean) {
+        //todo, support init-method
+    }
+
+    private Object postProcessOnBeanBeforeInitiation(Object bean, String beanName) {
+        Object val = bean;
+        for (BeanPostProcessor beanPostProcessor : this.beanPostProcessors) {
+            val = beanPostProcessor.postProcessBeforeInitialization(bean, beanName);
+            if (val == null) {
+                break;
+            }
+        }
+        return val;
+    }
+
+    private Object postProcessOnBeanAfterInitiation(Object bean, String beanName) {
+        Object val = bean;
+        for (BeanPostProcessor beanPostProcessor : this.beanPostProcessors) {
+            val = beanPostProcessor.postProcessAfterInitialization(bean, beanName);
+            if (val == null) {
+                break;
+            }
+        }
+        return val;
     }
 
     private void beforeSingletonCreation(String beanName) {
@@ -132,7 +219,6 @@ public abstract class AbstractApplicationContext implements BeanFactory {
         if (!this.singletonsInCreation.remove(beanName)) {
             throw new IllegalStateException(beanName + " isn't currently in creation");
         }
-        this.cachedSingletons.put(beanName, bean);
     }
 
     private void afterPrototypeCreation(String beanName, Object bean) {

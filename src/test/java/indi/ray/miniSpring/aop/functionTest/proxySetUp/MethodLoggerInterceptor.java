@@ -1,4 +1,4 @@
-package indi.ray.miniSpring.aop.functionTest.proxy;
+package indi.ray.miniSpring.aop.functionTest.proxySetUp;
 
 import indi.ray.miniSpring.aop.advise.MethodInterceptor;
 import indi.ray.miniSpring.aop.advise.MethodInvocation;

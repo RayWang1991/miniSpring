@@ -27,7 +27,7 @@ public class AnnotationApplicationContext extends AbstractApplicationContext {
 
     @Override
     protected void prepareRefresh() {
-        //todo
+        clear();
     }
 
     @Override
@@ -55,11 +55,6 @@ public class AnnotationApplicationContext extends AbstractApplicationContext {
 
     @Override
     protected void invokeBeanFactoryPostProcessors() {
-        // todo
-    }
-
-    @Override
-    protected void registerBeanPostProcessors() {
         // todo
     }
 

@@ -22,10 +22,10 @@ public class XmlApplicationContext extends AbstractApplicationContext {
 
     @Override
     protected void prepareRefresh() {
-        this.beanDefinitionMap.clear();
+        clear();
         runtimeBeanConstructorResolver = new RuntimeBeanConstructorResolver(beanDefinitionProvider.getStaticValueRefResolver());
         runtimeBeanConstructorResolver.setBeanFactory(this);
-        ((DefaultBeanCreator)beanCreator).setRuntimeBeanConstructorResolver(runtimeBeanConstructorResolver);
+        ((DefaultBeanCreator) beanCreator).setRuntimeBeanConstructorResolver(runtimeBeanConstructorResolver);
     }
 
     @Override
@@ -42,10 +42,6 @@ public class XmlApplicationContext extends AbstractApplicationContext {
 
     @Override
     protected void invokeBeanFactoryPostProcessors() {
-    }
-
-    @Override
-    protected void registerBeanPostProcessors() {
     }
 
     @Override

@@ -3,6 +3,7 @@ package indi.ray.miniSpring.aop.utils;
 import indi.ray.miniSpring.aop.advise.Advice;
 import indi.ray.miniSpring.aop.advise.MethodInterceptor;
 import indi.ray.miniSpring.aop.advisor.Advisor;
+import indi.ray.miniSpring.aop.advisor.DefaultPointCutAdvisor;
 import indi.ray.miniSpring.aop.advisor.PointCutAdvisor;
 import indi.ray.miniSpring.aop.exceptions.AopInvocationException;
 import indi.ray.miniSpring.aop.pointCut.MethodMatcher;
@@ -97,5 +98,15 @@ public class AopUtils {
         } catch (IllegalAccessException e) {
             throw new AopInvocationException(e.toString());
         }
+    }
+
+    public static Advisor wrapAdvisorIfNeeded(Object advice) {
+        if (advice instanceof Advisor) {
+            return (Advisor) advice;
+        }
+        if (advice instanceof MethodInterceptor) {
+            return new DefaultPointCutAdvisor((Advice) advice);
+        }
+        throw new UnsupportedOperationException("Only MethodInterceptor and Advisor are valid");
     }
 }

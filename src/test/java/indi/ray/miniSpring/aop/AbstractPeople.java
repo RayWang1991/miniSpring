@@ -20,10 +20,20 @@ public abstract class AbstractPeople implements People {
     }
 
     public String getName() {
+        try {
+            Thread.sleep(100);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return this.name;
     }
 
     public int getAge() {
+        try {
+            Thread.sleep(100);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return this.age;
     }
 

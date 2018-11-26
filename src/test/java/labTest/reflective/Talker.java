@@ -1,4 +1,4 @@
 package labTest.reflective;
 
-public interface Talker {
+public interface Talker extends Speaker, Dreamer {
 }

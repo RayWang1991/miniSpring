@@ -35,7 +35,7 @@ public class TypeUtils {
         try {
             clazz = Class.forName(name);
         } catch (ClassNotFoundException e) {
-            throw new BeansException(e.toString() + name);
+            throw new BeansException(e.toString());
         }
         return clazz;
     }
@@ -115,7 +115,7 @@ public class TypeUtils {
 
     public static boolean isTypeMatchPlain(Class<?> typeToMatch, Class<?> typeToTest) {
         AssertUtils.assertNotNull(typeToMatch, "type to match must not be null");
-        AssertUtils.assertNotNull(typeToTest, "type to test must not be null");
+        AssertUtils.assertNotNull(typeToTest, "type to proxyFactory must not be null");
         if (typeToMatch.isAssignableFrom(typeToTest)) return true;
         if (typeToMatch.isPrimitive()) {
             return typeToMatch == typeToTest;
@@ -136,7 +136,7 @@ public class TypeUtils {
     public static boolean isTypeMatchForList(Class<?> typeToMatch, Class<?> elementType) {
         // todo, 子元素检查
         if (typeToMatch.isArray()) {
-            Class<?>componentType = typeToMatch.getComponentType();
+            Class<?> componentType = typeToMatch.getComponentType();
             return componentType.isAssignableFrom(elementType);
         }
         // todo 泛型检查
@@ -146,4 +146,5 @@ public class TypeUtils {
     public static boolean isTypeMatchForSet(Class<?> typeToMatch) {
         return Set.class.isAssignableFrom(typeToMatch);
     }
+
 }

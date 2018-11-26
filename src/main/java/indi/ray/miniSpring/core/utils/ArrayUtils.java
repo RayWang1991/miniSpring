@@ -12,8 +12,13 @@ public class ArrayUtils {
         }
         StringBuilder sb = new StringBuilder();
         sb.append("[");
+        boolean hasContent = false;
         for (Object obj : array) {
-            sb.append(obj.toString());
+            hasContent = true;
+            sb.append(obj.toString()).append(",");
+        }
+        if (hasContent) {
+            sb.deleteCharAt(sb.length() - 1);
         }
         sb.append("]");
         return sb.toString();

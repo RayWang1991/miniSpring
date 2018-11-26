@@ -1,9 +1,11 @@
-package labTest.reflective;
+package labTest.reflective.test;
 
-import indi.ray.miniSpring.aop.proxy.Advised;
-import indi.ray.miniSpring.aop.proxy.AdvisedSupport;
 import indi.ray.miniSpring.aop.utils.ReflectiveUtils;
 import indi.ray.miniSpring.core.utils.ArrayUtils;
+import indi.ray.miniSpring.core.utils.AssertUtils;
+import labTest.reflective.Apple;
+import labTest.reflective.Student;
+import labTest.reflective.Talker;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
@@ -24,7 +26,8 @@ public class ReflectiveTest {
         Class<?>[] interfaces = Talker.class.getInterfaces();
         System.out.println(ArrayUtils.genStringForObjArray(interfaces));
 
-        Set<Class<?>> interfaceSet = ReflectiveUtils.getAllInterfacesForClass(Talker.class);
+        Set<Class<?>> interfaceSet = ReflectiveUtils.getAllInterfacesForClassAsSet(Student.class);
+        AssertUtils.assertTrue(interfaceSet.size() == 5, "Talker, Speaker, Dreamer, People, Animal");
         System.out.println(interfaceSet);
     }
 }

@@ -2,14 +2,62 @@
 <beans xmlns="http://indi.ray.miniSpring"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://indi.ray.miniSpring /Users/raywang/IdeaProjects/miniSpring/src/test/resources/schema/mySpring.xsd"
-       default-autowire="byType">
-    <bean id="obj" class="indi.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean"/>
-    <bean id="pojo" class="indi.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean"
-          autowired="byName">
-        <property name="a" value="10"/>
+       default-autowire="no">
+    <bean id="logInterceptor" class="indi.ray.miniSpring.aop.functionTest.proxySetUp.MethodLoggerInterceptor"/>
+    <bean id="performInterceptor" class="indi.ray.miniSpring.aop.functionTest.proxySetUp.MethodPerformanceInterceptor"/>
+    <bean id="nameRecorder" class="java.util.ArrayList"/>
+    <bean id="normRecorderInterceptor"
+          class="indi.ray.miniSpring.aop.functionTest.proxySetUp.MethodNameRecordInterceptor">
+        <constructor-arg>
+            <ref>nameRecorder</ref>
+        </constructor-arg>
     </bean>
-    <bean id="object" class="java.lang.Object"/>
-    <bean id="pojo1" class="indi.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean">
-        <property name="a" value="15"/>
+
+    <bean id="doubleRecorderInterceptor"
+          class="indi.ray.miniSpring.aop.functionTest.proxySetUp.MethodNameDoubleRecordInterceptor">
+        <constructor-arg>
+            <ref>nameRecorder</ref>
+        </constructor-arg>
+    </bean>
+
+
+    <bean id="student_target" class="indi.ray.miniSpring.aop.Student"/>
+
+    <bean id="student1" class="indi.ray.miniSpring.aop.proxy.ProxyFactoryBean">
+        <property name="interceptorNames">
+            <list type="java.lang.String">
+                <value>logInterceptor</value>
+            </list>
+        </property>
+        <property name="target" value-ref="student_target"/>
+    </bean>
+
+    <bean id="student2" class="indi.ray.miniSpring.aop.proxy.ProxyFactoryBean">
+        <property name="interceptorNames">
+            <list type="java.lang.String">
+                <value>normRecorderInterceptor</value>
+                <value>doubleRecorderInterceptor</value>
+            </list>
+        </property>
+        <property name="target" value-ref="student_target"/>
+    </bean>
+
+    <bean id="doubleRecorderInterceptor_prototype"
+          scope="prototype"
+          class="indi.ray.miniSpring.aop.functionTest.proxySetUp.MethodNameDoubleRecordInterceptor">
+        <constructor-arg>
+            <ref>nameRecorder</ref>
+        </constructor-arg>
+    </bean>
+
+
+    <bean id="student3" class="indi.ray.miniSpring.aop.proxy.ProxyFactoryBean" scope="prototype">
+        <property name="interceptorNames">
+            <list type="java.lang.String">
+                <value>normRecorderInterceptor</value>
+                <value>doubleRecorderInterceptor_prototype</value>
+            </list>
+        </property>
+        <property name="target" value-ref="student_target"/>
     </bean>
 </beans>
