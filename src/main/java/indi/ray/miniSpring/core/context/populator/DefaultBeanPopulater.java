@@ -9,11 +9,14 @@ import indi.ray.miniSpring.core.beans.definition.Value;
 import indi.ray.miniSpring.core.beans.definition.ValueOrRef;
 import indi.ray.miniSpring.core.beans.exception.BeanNotFoundException;
 import indi.ray.miniSpring.core.beans.factory.BeanFactory;
-import indi.ray.miniSpring.core.context.creator.BeanCreator;
+import indi.ray.miniSpring.core.utils.BeanUtils;
 import indi.ray.miniSpring.core.utils.StringUtils;
 import org.apache.log4j.Logger;
 
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,9 +36,9 @@ public class DefaultBeanPopulater implements BeanPopulater {
             Field field = beanProperty.getField();
             ValueOrRef valueOrRef = beanProperty.getFieldValue();
             if (valueOrRef.isValue()) {
-                injectFieldValue(bean, field, valueOrRef, beanFactory);
+                setFieldValue(bean, field, valueOrRef, beanFactory);
             } else {
-                injectFieldRef(bean, field, valueOrRef, beanFactory);
+                setFieldRef(bean, field, valueOrRef, beanFactory);
             }
         }
 
@@ -57,17 +60,18 @@ public class DefaultBeanPopulater implements BeanPopulater {
             String fieldName = field.getName();
             if (fieldType.isPrimitive()) continue;
             if (populatedNames.contains(fieldName)) continue;
-            injectFieldRef(bean, field, new RefImpl(fieldType, byName ? fieldName : null, false), beanFactory);
+            setFieldRef(bean, field, new RefImpl(fieldType, byName ? fieldName : null, false), beanFactory);
         }
     }
 
-    private void injectFieldValue(Object instance, Field field, Value value, BeanFactory beanFactory) {
+
+    private void setFieldValue(Object instance, Field field, Value value, BeanFactory beanFactory) {
         Object property = getValueObj(value, field.getType(), beanFactory);
-        setPropertyForField(field, instance, property);
+        setProperty(instance, field, property);
     }
 
-    private void injectFieldRef(Object instance, Field field, Ref relation,
-                                BeanFactory beanFactory) {
+    private void setFieldRef(Object instance, Field field, Ref relation,
+                             BeanFactory beanFactory) {
         String requiredName = relation.getRequiredName();
         Class<?> requiredClass = relation.getRequiredType();
         Object bean = null;
@@ -92,11 +96,39 @@ public class DefaultBeanPopulater implements BeanPopulater {
             // bean is not required
             return;
         }
-        setPropertyForField(field, instance, bean);
+
+        setProperty(instance, field, bean);
     }
 
 
-    private void setPropertyForField(Field field, Object instance, Object property) {
+    private void setProperty(Object instance, Field field, Object property) {
+        Method writer = getWriteMethod(field, instance.getClass());
+        if (writer != null) {
+            setPropertyUsingWriter(writer, instance, property);
+        } else {
+            setPropertyUsingFieldInject(instance, field, property);
+        }
+    }
+
+    //todo 待优化
+    private Method getWriteMethod(Field field, Class<?> clazz) {
+        Method writer = null;
+        try {
+            String readerName = BeanUtils.genReaderName(field);
+            String writerName = BeanUtils.genWriterName(field);
+            PropertyDescriptor pd = new PropertyDescriptor(field.getName(), clazz, readerName, writerName);
+            writer = pd.getWriteMethod();
+        } catch (IntrospectionException e) {
+            logger.info(e);
+        }
+        if (writer != null && !writer.isAccessible()) {
+            writer.setAccessible(true);
+        }
+        return writer;
+    }
+
+
+    private void setPropertyUsingFieldInject(Object instance, Field field, Object property) {
         if (!field.isAccessible()) {
             try {
                 field.setAccessible(true);
@@ -108,6 +140,15 @@ public class DefaultBeanPopulater implements BeanPopulater {
             field.set(instance, property);
         } catch (Exception e) {
             logger.error("无法设置属性" + e);
+        }
+    }
+
+
+    private void setPropertyUsingWriter(Method writer, Object instance, Object property) {
+        try {
+            writer.invoke(instance, property);
+        } catch (Exception e) {
+            logger.error(e);
         }
     }
 
