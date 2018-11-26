@@ -91,6 +91,14 @@ public interface BeanFactory {
      * @return the class of the bean
      */
     Class<?> getBeanType(String name);
+
+    /**
+     * find whether the bean is singleton or not
+     *
+     * @param beanName the name of bean
+     * @return
+     */
+    boolean isSingleton(String beanName);
 }
 
 

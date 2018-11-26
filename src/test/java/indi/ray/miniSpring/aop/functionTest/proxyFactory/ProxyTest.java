@@ -11,12 +11,13 @@ import indi.ray.miniSpring.aop.proxy.AdvisedSupport;
 import indi.ray.miniSpring.aop.proxy.AopProxy;
 import indi.ray.miniSpring.aop.proxy.AopProxyFactory;
 import indi.ray.miniSpring.aop.proxy.DefaultAopProxyFactory;
+import indi.ray.miniSpring.aop.proxy.ProxyFactory;
 import indi.ray.miniSpring.aop.proxy.SingletonTargetSource;
 import org.junit.Test;
 
 public class ProxyTest {
     @Test
-    public void test() {
+    public void testUsingBasicComponent() {
         // MethodInterceptor
         MethodInterceptor logInterceptor = new MethodLoggerInterceptor();
         MethodInterceptor performanceInterceptor = new MethodPerformanceInterceptor();
@@ -55,5 +56,23 @@ public class ProxyTest {
         man.say();
         man.getName();
         man.getAge();
+    }
+
+    @Test
+    public void testUsingProxyFactory() {
+        // MethodInterceptor
+        MethodInterceptor performanceInterceptor = new MethodPerformanceInterceptor();
+
+        // target
+        Man targetMan = new Man();
+        targetMan.setName("TOTO");
+        targetMan.setAge(10);
+
+        // proxy instance
+        People man = ProxyFactory.getProxy(People.class, targetMan, performanceInterceptor);
+
+        man.say();
+        System.out.println(man.getName());
+        System.out.println(man.getAge());
     }
 }

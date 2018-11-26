@@ -1,5 +1,7 @@
 package indi.ray.miniSpring.core.context;
 
+import indi.ray.miniSpring.core.API.BeanFactoryAware;
+import indi.ray.miniSpring.core.API.FactoryBean;
 import indi.ray.miniSpring.core.beans.definition.BeanDefinition;
 import indi.ray.miniSpring.core.beans.definition.ScopeEnum;
 import indi.ray.miniSpring.core.beans.exception.BeanCurrentlyInCreationException;
@@ -74,7 +76,7 @@ public abstract class AbstractApplicationContext implements BeanFactory {
         Object bean = this.cachedSingletons.get(beanName);
         if (bean != null) {
             logger.debug("从缓存中获取单例" + beanName);
-            return checkTypeForBean(beanName, bean, requiredType);
+            return getBeanInstanceFromBean(beanName, bean, requiredType);
         }
         BeanDefinition beanDefinition = this.beanDefinitionMap.get(beanName);
         if (null == beanDefinition) {
@@ -82,20 +84,39 @@ public abstract class AbstractApplicationContext implements BeanFactory {
         }
 
         // have to create new Bean
-        if (beanDefinition.getScopeEnum() == ScopeEnum.SINGLETON) {
+        bean = doCreateBean(beanName, beanDefinition);
+
+        return getBeanInstanceFromBean(beanName, bean, requiredType);
+    }
+
+    private Object doCreateBean(String beanName, BeanDefinition bd) {
+        Object bean;
+
+        if (bd.getScopeEnum() == ScopeEnum.SINGLETON) {
             beforeSingletonCreation(beanName);
-            bean = this.beanCreator.createBean(beanDefinition, this);
+            bean = this.beanCreator.createBean(bd, this);
             afterSingletonCreation(beanName, bean);
         } else {
             beforePrototypeCreation(beanName);
-            bean = this.beanCreator.createBean(beanDefinition, this);
+            bean = this.beanCreator.createBean(bd, this);
             afterPrototypeCreation(beanName, bean);
         }
 
         // populate bean
-        this.beanPopulater.populateBean(bean, beanDefinition, this);
+        populateBean(bean, bd);
+        initiateBean(bean);
 
-        return checkTypeForBean(beanName, bean, requiredType);
+        return bean;
+    }
+
+    private void populateBean(Object bean, BeanDefinition bd) {
+        this.beanPopulater.populateBean(bean, bd, this);
+    }
+
+    private void initiateBean(Object bean) {
+        if (bean instanceof BeanFactoryAware) {
+            ((BeanFactoryAware) bean).setBeanFactory(this);
+        }
     }
 
     private void beforeSingletonCreation(String beanName) {
@@ -127,6 +148,14 @@ public abstract class AbstractApplicationContext implements BeanFactory {
         if (!this.protoTypesInCreation.add(beanName)) {
             throw new BeanCurrentlyInCreationException(beanName);
         }
+    }
+
+    private <T> T getBeanInstanceFromBean(String beanName, Object bean, Class<T> requiredType) {
+        Object instance = bean;
+        if (bean instanceof FactoryBean) {
+            instance = ((FactoryBean) bean).getObject();
+        }
+        return checkTypeForBean(beanName, instance, requiredType);
     }
 
     private <T> T checkTypeForBean(String beanName, Object bean, final Class<T> requiredType) {
@@ -176,7 +205,7 @@ public abstract class AbstractApplicationContext implements BeanFactory {
                 BeanDefinition bd = this.beanDefinitionMap.get(name);
                 if (bd.isPrimary()) {
                     if (found) {
-                        throw new BeansException("类型" + requiredType + "有多个标注为@Primary的bean:" + name + "," + beanName);
+                        throw new BeansException("类型" + requiredType + "有多个设置为Primary的bean:" + name + "," + beanName);
                     } else {
                         found = true;
                         beanName = name;
@@ -200,6 +229,16 @@ public abstract class AbstractApplicationContext implements BeanFactory {
         return this.cachedSingletons.containsKey(name) || this.beanDefinitionMap.containsKey(name);
     }
 
+
+    /**
+     * @param beanName the name of bean
+     * @return
+     * @see BeanFactory#isSingleton(String)
+     */
+    public boolean isSingleton(String beanName) {
+        BeanDefinition bd = this.beanDefinitionMap.get(beanName);
+        return bd == null || bd.getScopeEnum() == ScopeEnum.SINGLETON;
+    }
 
     /**
      * @param name the name of the bean

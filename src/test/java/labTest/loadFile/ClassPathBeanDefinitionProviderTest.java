@@ -1,13 +1,13 @@
 package labTest.loadFile;
 
-import indi.ray.annotationSpring.core.annotations.Autowired;
-import indi.ray.annotationSpring.core.annotations.Component;
-import indi.ray.annotationSpring.core.annotations.Qualifier;
-import indi.ray.annotationSpring.core.beans.definition.BeanDefinition;
-import indi.ray.annotationSpring.core.beans.exception.BeansException;
-import indi.ray.annotationSpring.core.context.scanner.ClassPathBeanDefinitionsProvider;
-import indi.ray.annotationSpring.core.utils.AssertUtils;
-import indi.ray.annotationSpring.core.utils.Executable;
+import indi.ray.miniSpring.core.annotations.Autowired;
+import indi.ray.miniSpring.core.annotations.Component;
+import indi.ray.miniSpring.core.annotations.Qualifier;
+import indi.ray.miniSpring.core.beans.definition.BeanDefinition;
+import indi.ray.miniSpring.core.beans.exception.BeansException;
+import indi.ray.miniSpring.core.context.scanner.AnnotationBeanDefinitionsProvider;
+import indi.ray.miniSpring.core.utils.AssertUtils;
+import indi.ray.miniSpring.core.utils.Executable;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
@@ -16,7 +16,7 @@ import org.junit.Test;
 public class ClassPathBeanDefinitionProviderTest {
     private static final Logger logger = Logger.getLogger(ClassPathBeanDefinitionProviderTest.class);
 
-    protected ClassPathBeanDefinitionsProvider provider = new ClassPathBeanDefinitionsProvider();
+    protected AnnotationBeanDefinitionsProvider provider = new AnnotationBeanDefinitionsProvider();
 
     @Autowired
     @Qualifier("hahaha")

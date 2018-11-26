@@ -20,6 +20,12 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 
     private Map<Method, List<Object>> methodCacheForInterceptors = new ConcurrentHashMap<Method, List<Object>>();
 
+    /**
+     * 生产Aop代理之前调用，校验设置合法性
+     */
+    public void validate() {
+        AssertUtils.assertNotNull(this.targetSource, "target source can not be null");
+    }
 
     public List<Object> getInterceptorsAndDynamicInterceptionAdvice(Method method) {
         List<Object> cached = this.methodCacheForInterceptors.get(method);
@@ -52,6 +58,10 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
         return interfaceList.toArray(new Class[interfaceList.size()]);
     }
 
+    public void setTarget(Object target) {
+        this.setTargetSource(new SingletonTargetSource(target));
+    }
+
     public void setTargetSource(TargetSource targetSource) {
         this.targetSource = targetSource;
     }
@@ -67,6 +77,15 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
             }
         }
         return false;
+    }
+
+    protected void setAdvisorList(List<Advisor> advisorList) {
+        AssertUtils.assertNotNull(advisorList, "advisorList should not be null");
+        this.advisorList = advisorList;
+    }
+
+    protected List<Advisor> getAdvisorList() {
+        return advisorList;
     }
 
     public Advisor[] getAdvisors() {

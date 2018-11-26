@@ -1,6 +1,6 @@
 package labTest.loadFile;
 
-import indi.ray.annotationSpring.core.annotations.Component;
+import indi.ray.miniSpring.core.annotations.Component;
 
 @Component
 public class ClassWithNoAutowiredConstructor {
