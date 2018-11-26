@@ -48,7 +48,8 @@ public class StaticValueRefResolver {
                 }
             }
         }
-        return resolveElementByName(subElement.getNodeName(), subElement);
+
+        return subElement == null ? null : resolveElementByName(subElement.getNodeName(), subElement);
     }
 
     public ValueOrRef resolveRefValueForProperty(Element element) {
@@ -61,9 +62,17 @@ public class StaticValueRefResolver {
             if (nodeList == null || nodeList.getLength() == 0) {
                 return null;
             }
-            AssertUtils.assertTrue(nodeList.getLength() == 1, "property只能有一个子元素");
-            Element subElement = (Element) nodeList.item(0);
-            return resolveElementByName(subElement.getNodeName(), subElement);
+            Element subElement = null;
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Node node = nodeList.item(i);
+                if (XmlParsingUtils.isCandidateElement(node)) {
+                    if (subElement != null) {
+                        throw new InvalidXmlException("property只能有一个子元素");
+                    }
+                    subElement = (Element) node;
+                }
+            }
+            return subElement == null ? null : resolveElementByName(subElement.getNodeName(), subElement);
         }
     }
 
