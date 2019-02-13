@@ -3,16 +3,16 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://indi.ray.miniSpring /Users/raywang/IdeaProjects/miniSpring/src/test/resources/schema/mySpring.xsd"
        default-autowire="byName">
-    <bean id="pojo1" class="indi.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean"/>
-    <bean class="indi.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean"/>
-    <bean id="pojo2" class="indi.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean"/>
-    <bean id="constructorTestBean" class="indi.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
+    <bean id="pojo1" class="com.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean"/>
+    <bean class="com.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean"/>
+    <bean id="pojo2" class="com.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean"/>
+    <bean id="constructorTestBean" class="com.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
         <constructor-arg type="java.lang.Object" index="0">
             <ref>pojo1</ref>
         </constructor-arg>
-        <constructor-arg type="indi.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean" index="1">
+        <constructor-arg type="com.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean" index="1">
             <ref>pojo2</ref>
         </constructor-arg>
     </bean>
-    <bean class="indi.ray.miniSpring.core.functionTest.xml.postProcessors.SayNamePostProcessor"/>
+    <bean class="com.ray.miniSpring.core.functionTest.xml.postProcessors.SayNamePostProcessor"/>
 </beans>

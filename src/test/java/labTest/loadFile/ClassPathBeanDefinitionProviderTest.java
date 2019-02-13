@@ -1,13 +1,13 @@
 package labTest.loadFile;
 
-import indi.ray.miniSpring.core.annotations.Autowired;
-import indi.ray.miniSpring.core.annotations.Component;
-import indi.ray.miniSpring.core.annotations.Qualifier;
-import indi.ray.miniSpring.core.beans.definition.BeanDefinition;
-import indi.ray.miniSpring.core.beans.exception.BeansException;
-import indi.ray.miniSpring.core.context.scanner.AnnotationBeanDefinitionsProvider;
-import indi.ray.miniSpring.core.utils.AssertUtils;
-import indi.ray.miniSpring.core.utils.Executable;
+import com.ray.miniSpring.core.annotations.Autowired;
+import com.ray.miniSpring.core.annotations.Component;
+import com.ray.miniSpring.core.annotations.Qualifier;
+import com.ray.miniSpring.core.beans.definition.BeanDefinition;
+import com.ray.miniSpring.core.beans.exception.BeansException;
+import com.ray.miniSpring.core.context.scanner.AnnotationBeanDefinitionsProvider;
+import com.ray.miniSpring.core.utils.AssertUtils;
+import com.ray.miniSpring.core.utils.Executable;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 

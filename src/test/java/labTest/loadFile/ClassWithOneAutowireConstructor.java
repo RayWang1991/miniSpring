@@ -1,7 +1,7 @@
 package labTest.loadFile;
 
-import indi.ray.miniSpring.core.annotations.Autowired;
-import indi.ray.miniSpring.core.annotations.Component;
+import com.ray.miniSpring.core.annotations.Autowired;
+import com.ray.miniSpring.core.annotations.Component;
 
 @Component
 public class ClassWithOneAutowireConstructor {

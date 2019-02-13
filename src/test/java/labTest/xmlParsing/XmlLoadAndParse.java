@@ -1,6 +1,6 @@
 package labTest.xmlParsing;
 
-import indi.ray.miniSpring.core.context.scanner.utils.SimpleErrorHandler;
+import com.ray.miniSpring.core.context.scanner.utils.SimpleErrorHandler;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.w3c.dom.Document;

@@ -1,8 +1,8 @@
 package labTest.reflective.test;
 
-import indi.ray.miniSpring.aop.utils.ReflectiveUtils;
-import indi.ray.miniSpring.core.utils.ArrayUtils;
-import indi.ray.miniSpring.core.utils.AssertUtils;
+import com.ray.miniSpring.aop.utils.ReflectiveUtils;
+import com.ray.miniSpring.core.utils.ArrayUtils;
+import com.ray.miniSpring.core.utils.AssertUtils;
 import labTest.reflective.Apple;
 import labTest.reflective.Student;
 import labTest.reflective.Talker;

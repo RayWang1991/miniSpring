@@ -3,8 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://indi.ray.miniSpring /Users/raywang/IdeaProjects/miniSpring/src/test/resources/schema/mySpring.xsd"
        default-autowire="no">
-    <bean id="pojo1" class="indi.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean"/>
-    <bean id="pojo2" class="indi.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean">
+    <bean id="pojo1" class="com.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean"/>
+    <bean id="pojo2" class="com.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean">
         <property name="obj" value-ref="pojo1"/>
         <property name="a" value="10"/>
     </bean>

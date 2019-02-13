@@ -3,27 +3,27 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://indi.ray.miniSpring /Users/raywang/IdeaProjects/miniSpring/src/test/resources/schema/mySpring.xsd"
        default-autowire="no">
-    <bean id="logInterceptor" class="indi.ray.miniSpring.aop.functionTest.proxySetUp.MethodLoggerInterceptor"/>
-    <bean id="performInterceptor" class="indi.ray.miniSpring.aop.functionTest.proxySetUp.MethodPerformanceInterceptor"/>
+    <bean id="logInterceptor" class="com.ray.miniSpring.aop.functionTest.proxySetUp.MethodLoggerInterceptor"/>
+    <bean id="performInterceptor" class="com.ray.miniSpring.aop.functionTest.proxySetUp.MethodPerformanceInterceptor"/>
     <bean id="nameRecorder" class="java.util.ArrayList"/>
     <bean id="normRecorderInterceptor"
-          class="indi.ray.miniSpring.aop.functionTest.proxySetUp.MethodNameRecordInterceptor">
+          class="com.ray.miniSpring.aop.functionTest.proxySetUp.MethodNameRecordInterceptor">
         <constructor-arg>
             <ref>nameRecorder</ref>
         </constructor-arg>
     </bean>
 
     <bean id="doubleRecorderInterceptor"
-          class="indi.ray.miniSpring.aop.functionTest.proxySetUp.MethodNameDoubleRecordInterceptor">
+          class="com.ray.miniSpring.aop.functionTest.proxySetUp.MethodNameDoubleRecordInterceptor">
         <constructor-arg>
             <ref>nameRecorder</ref>
         </constructor-arg>
     </bean>
 
 
-    <bean id="student_target" class="indi.ray.miniSpring.aop.Student"/>
+    <bean id="student_target" class="com.ray.miniSpring.aop.Student"/>
 
-    <bean id="student1" class="indi.ray.miniSpring.aop.proxy.ProxyFactoryBean">
+    <bean id="student1" class="com.ray.miniSpring.aop.proxy.ProxyFactoryBean">
         <property name="interceptorNames">
             <list type="java.lang.String">
                 <value>logInterceptor</value>
@@ -32,7 +32,7 @@
         <property name="target" value-ref="student_target"/>
     </bean>
 
-    <bean id="student2" class="indi.ray.miniSpring.aop.proxy.ProxyFactoryBean">
+    <bean id="student2" class="com.ray.miniSpring.aop.proxy.ProxyFactoryBean">
         <property name="interceptorNames">
             <list type="java.lang.String">
                 <value>normRecorderInterceptor</value>
@@ -44,14 +44,14 @@
 
     <bean id="doubleRecorderInterceptor_prototype"
           scope="prototype"
-          class="indi.ray.miniSpring.aop.functionTest.proxySetUp.MethodNameDoubleRecordInterceptor">
+          class="com.ray.miniSpring.aop.functionTest.proxySetUp.MethodNameDoubleRecordInterceptor">
         <constructor-arg>
             <ref>nameRecorder</ref>
         </constructor-arg>
     </bean>
 
 
-    <bean id="student3" class="indi.ray.miniSpring.aop.proxy.ProxyFactoryBean" scope="prototype">
+    <bean id="student3" class="com.ray.miniSpring.aop.proxy.ProxyFactoryBean" scope="prototype">
         <property name="interceptorNames">
             <list type="java.lang.String">
                 <value>normRecorderInterceptor</value>

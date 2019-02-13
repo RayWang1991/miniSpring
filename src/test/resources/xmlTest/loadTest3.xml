@@ -4,9 +4,9 @@
        xsi:schemaLocation="http://indi.ray.miniSpring /Users/raywang/IdeaProjects/miniSpring/src/test/resources/schema/mySpring.xsd"
        default-autowire="byName">
     <bean id="obj" class="java.lang.String"/>
-    <bean id="pojo" class="indi.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean"/>
+    <bean id="pojo" class="com.ray.miniSpring.core.functionTest.xml.basic.PoJoTestBean"/>
     <bean id="constructorTestBean1"
-          class="indi.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
+          class="com.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
         <constructor-arg>
             <ref>obj</ref>
         </constructor-arg>
@@ -15,7 +15,7 @@
         </constructor-arg>
     </bean>
     <bean id="constructorTestBean2"
-          class="indi.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
+          class="com.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
         <constructor-arg>
             <ref>obj</ref>
         </constructor-arg>
@@ -27,7 +27,7 @@
         </constructor-arg>
     </bean>
     <bean id="constructorTestBean3"
-          class="indi.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
+          class="com.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
         <constructor-arg>
             <ref>obj</ref>
         </constructor-arg>
@@ -36,7 +36,7 @@
         </constructor-arg>
     </bean>
     <bean id="constructorTestBean4"
-          class="indi.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
+          class="com.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
         <constructor-arg>
             <list type="java.lang.Object">
                 <value>obj</value>
@@ -51,13 +51,13 @@
         </constructor-arg>
     </bean>
     <bean id="constructorTestBean5"
-          class="indi.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
+          class="com.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
         <constructor-arg >
             <value>1</value>
         </constructor-arg>
     </bean>
     <bean id="constructorTestBean6"
-          class="indi.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
+          class="com.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
         <constructor-arg >
             <list type="java.lang.Integer">
                 <value>1</value>
@@ -65,7 +65,7 @@
         </constructor-arg>
     </bean>
     <bean id="constructorTestBean7"
-          class="indi.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
+          class="com.ray.miniSpring.core.functionTest.xml.basic.ConstructorTestBean">
         <constructor-arg>
             <set type="java.lang.String">
                 <value>1</value>

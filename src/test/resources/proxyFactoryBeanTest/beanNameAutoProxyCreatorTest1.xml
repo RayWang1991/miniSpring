@@ -3,27 +3,27 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://indi.ray.miniSpring /Users/raywang/IdeaProjects/miniSpring/src/test/resources/schema/mySpring.xsd"
        default-autowire="byName">
-    <bean id="logInterceptor" class="indi.ray.miniSpring.aop.functionTest.proxySetUp.MethodLoggerInterceptor"/>
-    <bean id="performInterceptor" class="indi.ray.miniSpring.aop.functionTest.proxySetUp.MethodPerformanceInterceptor"/>
+    <bean id="logInterceptor" class="com.ray.miniSpring.aop.functionTest.proxySetUp.MethodLoggerInterceptor"/>
+    <bean id="performInterceptor" class="com.ray.miniSpring.aop.functionTest.proxySetUp.MethodPerformanceInterceptor"/>
     <bean id="nameRecorder" class="java.util.ArrayList"/>
     <bean id="normRecorderInterceptor"
-          class="indi.ray.miniSpring.aop.functionTest.proxySetUp.MethodNameRecordInterceptor">
+          class="com.ray.miniSpring.aop.functionTest.proxySetUp.MethodNameRecordInterceptor">
         <constructor-arg>
             <ref>nameRecorder</ref>
         </constructor-arg>
     </bean>
 
     <bean id="doubleRecorderInterceptor"
-          class="indi.ray.miniSpring.aop.functionTest.proxySetUp.MethodNameDoubleRecordInterceptor">
+          class="com.ray.miniSpring.aop.functionTest.proxySetUp.MethodNameDoubleRecordInterceptor">
         <constructor-arg>
             <ref>nameRecorder</ref>
         </constructor-arg>
     </bean>
 
 
-    <bean id="student" class="indi.ray.miniSpring.aop.Student"/>
+    <bean id="student" class="com.ray.miniSpring.aop.Student"/>
 
-    <bean class="indi.ray.miniSpring.aop.autoProxyCreator.BeanNameAutoProxyCreator">
+    <bean class="com.ray.miniSpring.aop.autoProxyCreator.BeanNameAutoProxyCreator">
         <property name="interceptorNames">
             <list type="java.lang.String">
                 <value>logInterceptor</value>
